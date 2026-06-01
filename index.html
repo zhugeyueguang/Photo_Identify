@@ -14,11 +14,9 @@
       --border: #e2e8f0; --border-light: #f1f5f9;
       --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07);
       --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.12);
-      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-xl: 28px;
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       background: #f0f4ff;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -31,8 +29,6 @@
       -webkit-tap-highlight-color: transparent;
       -webkit-font-smoothing: antialiased;
     }
-
-    /* ===== 移动端容器 ===== */
     .app-container {
       width: 100%;
       max-width: 100%;
@@ -42,528 +38,103 @@
       position: relative;
       z-index: 1;
     }
-
-    /* 平板和桌面端 */
     @media (min-width: 768px) {
-      body {
-        align-items: center;
-        padding: 20px;
-      }
-      .app-container {
-        max-width: 720px;
-        min-height: auto;
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-xl);
-        padding: 32px 28px;
-        margin: 20px 0;
-      }
+      body { align-items: center; padding: 20px; }
+      .app-container { max-width: 720px; min-height: auto; border-radius: 28px; box-shadow: var(--shadow-xl); padding: 32px 28px; margin: 20px 0; }
     }
-
-    @media (min-width: 1024px) {
-      .app-container {
-        max-width: 740px;
-        padding: 36px 30px;
-      }
-    }
-
-    /* ===== 头部 ===== */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-icon {
-      width: 36px; height: 36px;
-      background: var(--accent-gradient);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      color: #fff;
-    }
-    @media (min-width: 768px) {
-      .logo-icon { width: 40px; height: 40px; font-size: 1.2rem; }
-    }
-    .logo-text {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1e293b;
-    }
-    @media (min-width: 768px) {
-      .logo-text { font-size: 1.3rem; }
-    }
-    .version-badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      background: var(--accent-light);
-      color: var(--accent);
-      padding: 3px 8px;
-      border-radius: 20px;
-    }
-    .subtitle {
-      color: #475569;
-      font-size: 0.85rem;
-      margin-bottom: 20px;
-      padding-left: 12px;
-      border-left: 3px solid var(--accent);
-    }
-    @media (min-width: 768px) {
-      .subtitle { font-size: 0.9rem; margin-bottom: 24px; }
-    }
-
-    /* ===== 提示 ===== */
-    .tips-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: var(--radius-md);
-      padding: 10px 14px;
-      margin-bottom: 18px;
-      font-size: 0.75rem;
-      color: #1e40af;
-      line-height: 1.5;
-    }
-    @media (min-width: 768px) {
-      .tips-box { font-size: 0.78rem; padding: 12px 16px; margin-bottom: 20px; }
-    }
-
-    /* ===== 上传区域（移动端增大） ===== */
-    .upload-label {
-      display: block;
-      cursor: pointer;
-      margin-bottom: 18px;
-      -webkit-tap-highlight-color: rgba(59,130,246,0.1);
-    }
-    @media (min-width: 768px) {
-      .upload-label { margin-bottom: 20px; }
-    }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 36px; height: 36px; background: var(--accent-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; }
+    @media (min-width: 768px) { .logo-icon { width: 40px; height: 40px; font-size: 1.2rem; } }
+    .logo-text { font-size: 1.2rem; font-weight: 700; color: #1e293b; }
+    .version-badge { font-size: 0.6rem; font-weight: 600; background: #dbeafe; color: #1e40af; padding: 3px 8px; border-radius: 20px; }
+    .subtitle { color: #475569; font-size: 0.85rem; margin-bottom: 20px; padding-left: 12px; border-left: 3px solid var(--accent); }
+    .tips-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 18px; font-size: 0.75rem; color: #1e40af; line-height: 1.5; }
+    .upload-label { display: block; cursor: pointer; margin-bottom: 18px; }
     .upload-zone {
-      border: 2px dashed #cbd5e1;
-      border-radius: var(--radius-lg);
-      padding: 32px 16px;
-      text-align: center;
-      background: #fafbfc;
-      transition: all 0.25s;
-      user-select: none;
-      /* 移动端增大触摸区域 */
-      min-height: 140px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      border: 2px dashed #cbd5e1; border-radius: var(--radius-lg); padding: 32px 16px;
+      text-align: center; background: #fafbfc; transition: all 0.25s; user-select: none;
+      min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    @media (min-width: 768px) {
-      .upload-zone {
-        padding: 40px 20px;
-        min-height: 160px;
-      }
-    }
-    .upload-label:active .upload-zone {
-      border-color: var(--accent);
-      background: #f5f7ff;
-    }
-    @media (hover: hover) {
-      .upload-label:hover .upload-zone {
-        border-color: var(--accent);
-        background: #f5f7ff;
-        box-shadow: 0 0 0 4px rgba(59,130,246,0.08);
-      }
-    }
-    .upload-zone.drag-active {
-      border-color: #2563eb !important;
-      background: #eef2ff !important;
-      border-style: solid !important;
-    }
-    .upload-icon {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-      display: block;
-    }
-    @media (min-width: 768px) {
-      .upload-icon { font-size: 2.5rem; margin-bottom: 10px; }
-    }
-    .upload-text {
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-      color: #0f172a;
-    }
-    .upload-hint {
-      font-size: 0.75rem;
-      color: #94a3b8;
-    }
-
+    .upload-label:active .upload-zone { border-color: var(--accent); background: #f5f7ff; }
+    .upload-zone.drag-active { border-color: #2563eb !important; background: #eef2ff !important; border-style: solid !important; }
+    .upload-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .upload-text { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+    .upload-hint { font-size: 0.75rem; color: #94a3b8; }
     #fileInput { display: none; }
-
-    /* ===== 预览区域 ===== */
-    .preview-section {
-      display: none;
-      margin-bottom: 18px;
-      text-align: center;
-    }
-    .preview-img {
-      max-width: 100%;
-      max-height: 220px;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      object-fit: contain;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-    }
-    @media (min-width: 768px) {
-      .preview-img { max-height: 260px; }
-    }
-    .file-name {
-      margin-top: 6px;
-      font-size: 0.75rem;
-      color: #475569;
-      font-weight: 500;
-      word-break: break-all;
-    }
-
-    /* ===== 按钮 ===== */
+    .preview-section { display: none; margin-bottom: 18px; text-align: center; }
+    .preview-img { max-width: 100%; max-height: 220px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); object-fit: contain; background: #f8fafc; border: 1px solid var(--border); }
+    .file-name { margin-top: 6px; font-size: 0.75rem; color: #475569; font-weight: 500; word-break: break-all; }
     .action-btn {
-      width: 100%;
-      background: #1e293b;
-      color: #fff;
-      border: none;
-      padding: 15px 20px;
-      border-radius: var(--radius-md);
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-      margin-bottom: 18px;
-      -webkit-tap-highlight-color: transparent;
-      /* 移动端触摸反馈 */
-      touch-action: manipulation;
+      width: 100%; background: #1e293b; color: #fff; border: none; padding: 15px 20px;
+      border-radius: var(--radius-md); font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.2s; margin-bottom: 18px; touch-action: manipulation;
     }
-    @media (min-width: 768px) {
-      .action-btn { padding: 16px 24px; font-size: 1rem; margin-bottom: 20px; }
-    }
-    .action-btn:active {
-      background: #334155;
-      transform: scale(0.98);
-    }
-    @media (hover: hover) {
-      .action-btn:hover:not(:disabled) {
-        background: #334155;
-        transform: translateY(-1px);
-      }
-    }
-    .action-btn:disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-      color: #94a3b8;
-      transform: none;
-    }
-
-    /* ===== 进度条 ===== */
-    .progress-container {
-      display: none;
-      margin: 8px 0 18px;
-    }
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-      font-size: 0.8rem;
-      color: #475569;
-    }
-    .progress-bar {
-      height: 5px;
-      background: #e2e8f0;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--accent);
-      border-radius: 10px;
-      transition: width 0.3s;
-    }
-
-    /* ===== 结果卡片（移动端垂直排列） ===== */
-    .result-card {
-      display: none;
-      background: #fafbfc;
-      border-radius: var(--radius-lg);
-      padding: 18px 14px;
-      margin-top: 8px;
-      border: 1px solid var(--border-light);
-    }
-    @media (min-width: 768px) {
-      .result-card { padding: 24px; }
-    }
-
-    /* 综合判定 */
-    .verdict {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 16px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border-light);
-    }
-    .verdict-icon {
-      width: 40px; height: 40px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-    @media (min-width: 768px) {
-      .verdict-icon { width: 44px; height: 44px; font-size: 1.3rem; }
-    }
+    .action-btn:active { background: #334155; transform: scale(0.98); }
+    .action-btn:disabled { background: #cbd5e1; cursor: not-allowed; color: #94a3b8; transform: none; }
+    .progress-container { display: none; margin: 8px 0 18px; }
+    .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.8rem; color: #475569; }
+    .progress-bar { height: 5px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+    .progress-fill { width: 0%; height: 100%; background: var(--accent); border-radius: 10px; transition: width 0.3s; }
+    .result-card { display: none; background: #fafbfc; border-radius: var(--radius-lg); padding: 18px 14px; margin-top: 8px; border: 1px solid var(--border-light); }
+    .verdict { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border-light); }
+    .verdict-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
     .verdict-icon.safe { background: #ecfdf5; color: #059669; }
     .verdict-icon.warning { background: #fffbeb; color: #d97706; }
     .verdict-icon.danger { background: #fef2f2; color: #dc2626; }
-    .verdict-text {
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-    @media (min-width: 768px) {
-      .verdict-text { font-size: 1.1rem; }
-    }
-    .verdict-badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 14px;
-      font-size: 0.68rem;
-      font-weight: 600;
-      margin-top: 2px;
-    }
+    .verdict-text { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+    .verdict-badge { display: inline-block; padding: 3px 10px; border-radius: 14px; font-size: 0.68rem; font-weight: 600; margin-top: 2px; }
     .badge-safe { background: #d1fae5; color: #065f46; }
     .badge-warning { background: #fef3c7; color: #92400e; }
     .badge-danger { background: #fee2e2; color: #991b1b; }
-    .verdict-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 4px;
-    }
-    .verdict-tags span {
-      font-size: 0.6rem;
-      padding: 2px 6px;
-      border-radius: 8px;
-      white-space: nowrap;
-    }
-
-    /* 维度卡片（移动端垂直排列） */
-    .dimension {
-      display: flex;
-      flex-direction: column;
-      padding: 12px 0;
-      border-bottom: 1px solid #eef2f6;
-      gap: 6px;
-    }
-    @media (min-width: 768px) {
-      .dimension {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 14px 0;
-      }
-    }
-    .dimension:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-    .dim-top {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      flex: 1;
-    }
-    .dim-icon {
-      font-size: 1rem;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .dim-label {
-      font-weight: 600;
-      font-size: 0.82rem;
-    }
-    .dim-desc {
-      font-size: 0.73rem;
-      color: #94a3b8;
-      margin-top: 1px;
-      line-height: 1.4;
-    }
-    .dim-detail {
-      font-size: 0.68rem;
-      color: #94a3b8;
-      margin-top: 1px;
-      font-family: monospace;
-      word-break: break-all;
-    }
-    .dim-bottom {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 8px;
-    }
-    @media (min-width: 768px) {
-      .dim-bottom {
-        justify-content: flex-end;
-        min-width: 80px;
-      }
-    }
-    .dim-value {
-      font-weight: 700;
-      font-size: 0.82rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .verdict-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .verdict-tags span { font-size: 0.6rem; padding: 2px 6px; border-radius: 8px; white-space: nowrap; }
+    .dimension { display: flex; flex-direction: column; padding: 12px 0; border-bottom: 1px solid #eef2f6; gap: 6px; }
+    .dimension:last-child { border-bottom: none; padding-bottom: 0; }
+    @media (min-width: 768px) { .dimension { flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 14px 0; } }
+    .dim-top { display: flex; align-items: flex-start; gap: 8px; flex: 1; }
+    .dim-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .dim-label { font-weight: 600; font-size: 0.82rem; }
+    .dim-desc { font-size: 0.73rem; color: #94a3b8; margin-top: 1px; line-height: 1.4; }
+    .dim-detail { font-size: 0.68rem; color: #94a3b8; margin-top: 1px; font-family: monospace; word-break: break-all; }
+    .dim-bottom { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+    .dim-value { font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; gap: 6px; }
     .dim-value.risk-high { color: var(--danger); }
     .dim-value.risk-mid { color: var(--warning); }
     .dim-value.risk-low { color: var(--success); }
-    .confidence-tag {
-      background: #f1f5f9;
-      color: #475569;
-      padding: 2px 7px;
-      border-radius: 10px;
-      font-size: 0.68rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    /* 其他元素 */
-    .integrity-warn {
-      margin-top: 8px;
-      padding: 10px 12px;
-      background: #fef2f2;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-      display: none;
-      line-height: 1.5;
-    }
-    .quadrant-info {
-      margin-top: 8px;
-      padding: 8px 10px;
-      background: #f8fafc;
-      border-radius: 6px;
-      font-size: 0.65rem;
-      color: #475569;
-      font-family: monospace;
-      border: 1px solid #e2e8f0;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    @media (min-width: 768px) {
-      .quadrant-info { font-size: 0.7rem; }
-    }
-    .exif-note {
-      margin-top: 8px;
-      padding: 8px 10px;
-      background: #fefce8;
-      border-radius: 6px;
-      font-size: 0.65rem;
-      color: #92400e;
-      border: 1px solid #fde68a;
-      display: none;
-      font-family: monospace;
-      white-space: pre-wrap;
-      word-break: break-all;
-      line-height: 1.4;
-    }
-    .analysis-note {
-      margin-top: 8px;
-      padding: 10px 12px;
-      background: #f0fdf4;
-      border-radius: 6px;
-      font-size: 0.68rem;
-      color: #166534;
-      line-height: 1.5;
-      border: 1px solid #bbf7d0;
-    }
-    .disclaimer {
-      margin-top: 14px;
-      padding: 10px 12px;
-      font-size: 0.7rem;
-      color: #94a3b8;
-      background: #fff;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-light);
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      line-height: 1.4;
-    }
-    .reset-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 16px;
-      color: var(--accent);
-      font-size: 0.82rem;
-      cursor: pointer;
-      font-weight: 600;
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      -webkit-tap-highlight-color: rgba(59,130,246,0.1);
-    }
-    .reset-link:active {
-      background: var(--accent-light);
-    }
-    @media (hover: hover) {
-      .reset-link:hover { background: var(--accent-light); }
-    }
+    .confidence-tag { background: #f1f5f9; color: #475569; padding: 2px 7px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
+    .integrity-warn { margin-top: 8px; padding: 10px 12px; background: #fef2f2; border-radius: 6px; font-size: 0.7rem; color: #991b1b; border: 1px solid #fecaca; display: none; line-height: 1.5; }
+    .quadrant-info { margin-top: 8px; padding: 8px 10px; background: #f8fafc; border-radius: 6px; font-size: 0.65rem; color: #475569; font-family: monospace; border: 1px solid #e2e8f0; overflow-x: auto; white-space: nowrap; }
+    .exif-note { margin-top: 8px; padding: 8px 10px; background: #fefce8; border-radius: 6px; font-size: 0.65rem; color: #92400e; border: 1px solid #fde68a; display: none; font-family: monospace; white-space: pre-wrap; word-break: break-all; line-height: 1.4; }
+    .analysis-note { margin-top: 8px; padding: 10px 12px; background: #f0fdf4; border-radius: 6px; font-size: 0.68rem; color: #166534; line-height: 1.5; border: 1px solid #bbf7d0; }
+    .disclaimer { margin-top: 14px; padding: 10px 12px; font-size: 0.7rem; color: #94a3b8; background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border-light); display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
+    .reset-link { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 16px; color: var(--accent); font-size: 0.82rem; cursor: pointer; font-weight: 600; padding: 12px; border-radius: var(--radius-sm); }
+    .reset-link:active { background: var(--accent-light); }
+    .ai-model-badge { display: inline-block; font-size: 0.6rem; background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 8px; margin-left: 4px; }
   </style>
 </head>
 <body>
   <div class="app-container">
     <div class="header">
       <div class="logo"><div class="logo-icon">🔍</div><span class="logo-text">图像鉴真</span></div>
-      <span class="version-badge">v22 · 移动版</span>
+      <span class="version-badge">v23 · AI模型</span>
     </div>
-    <div class="subtitle">上传照片 · AI真伪检测 · 预防诈骗</div>
-
-    <div class="tips-box">
-      <strong>💡 提示：</strong>请使用<b>光线充足、画质清晰</b>的原始照片。微信传输会清除EXIF数据，但不影响像素分析。
-    </div>
+    <div class="subtitle">上传照片 · 本地分析 + AI模型双重检测</div>
+    <div class="tips-box"><strong>💡 提示：</strong>请使用<b>光线充足、画质清晰</b>的原始照片。现已接入AI模型，准确率大幅提升。</div>
 
     <label class="upload-label" for="fileInput">
       <div class="upload-zone" id="uploadZone">
         <span class="upload-icon">📁</span>
         <div class="upload-text">点击选择照片</div>
-        <div class="upload-hint">JPG / PNG / WEBP · 最大 30MB</div>
+        <div class="upload-hint">JPG / PNG / WEBP · 最大 15MB</div>
       </div>
     </label>
     <input type="file" id="fileInput" accept="image/*">
-
-    <div class="preview-section" id="previewSection">
-      <img id="previewImage" class="preview-img" src="" alt="预览">
-      <div class="file-name" id="fileName"></div>
-    </div>
+    <div class="preview-section" id="previewSection"><img id="previewImage" class="preview-img" src="" alt="预览"><div class="file-name" id="fileName"></div></div>
     <canvas id="analysisCanvas" style="display:none;"></canvas>
-
     <button class="action-btn" id="analyzeBtn" disabled>🔬 开始检测</button>
-
-    <div class="progress-container" id="progressContainer">
-      <div class="progress-info"><span id="statusText">⏳ 准备中...</span><span id="progressPercent">0%</span></div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    </div>
+    <div class="progress-container" id="progressContainer"><div class="progress-info"><span id="statusText">⏳ 准备中...</span><span id="progressPercent">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div></div>
 
     <div class="result-card" id="resultCard">
       <div class="verdict" id="verdictArea"></div>
@@ -572,14 +143,19 @@
       <div class="quadrant-info" id="quadrantInfo"></div>
       <div class="exif-note" id="exifNote"></div>
       <div class="analysis-note" id="analysisNote"></div>
-      <div class="disclaimer"><span>⚠️</span><span>本结果由本地Canvas像素分析+元数据交叉验证生成。建议使用清晰原图。</span></div>
+      <div class="disclaimer"><span>⚠️</span><span>本结果由本地像素分析 + ModelScope AI模型综合判定，仅供参考。</span></div>
       <div class="reset-link" id="resetLink">🔄 重新上传照片</div>
     </div>
   </div>
 
   <script>
     (function(){
-      console.log('🔍 v22 移动版启动');
+      console.log('🔍 v23 AI模型版启动');
+
+      // ==================== 配置 ====================
+      const MODELSCOPE_TOKEN = 'ms-34bbd7cd-947b-484d-92a9-fd15c81a250a';
+      const API_URL = 'https://api.modelscope.cn/api/v1/models/iic/cv_vit_image-falsification-detection/predict';
+
       const els={uploadZone:document.getElementById('uploadZone'),fileInput:document.getElementById('fileInput'),previewSection:document.getElementById('previewSection'),previewImage:document.getElementById('previewImage'),fileNameEl:document.getElementById('fileName'),analyzeBtn:document.getElementById('analyzeBtn'),progressContainer:document.getElementById('progressContainer'),progressFill:document.getElementById('progressFill'),progressPercent:document.getElementById('progressPercent'),statusText:document.getElementById('statusText'),resultCard:document.getElementById('resultCard'),verdictArea:document.getElementById('verdictArea'),dimensionsContainer:document.getElementById('dimensionsContainer'),integrityWarn:document.getElementById('integrityWarn'),quadrantInfo:document.getElementById('quadrantInfo'),exifNote:document.getElementById('exifNote'),analysisNote:document.getElementById('analysisNote'),resetLink:document.getElementById('resetLink'),analysisCanvas:document.getElementById('analysisCanvas')};
       let sf=null,ib64=null;
       function resetUI(){els.resultCard.style.display='none';els.progressContainer.style.display='none';els.exifNote.style.display='none';els.integrityWarn.style.display='none';els.analyzeBtn.disabled=true;sf=null;ib64=null;els.fileInput.value='';els.previewSection.style.display='none';els.previewImage.src='';els.fileNameEl.textContent='';els.progressFill.style.width='0%';els.progressPercent.textContent='0%';}
@@ -588,7 +164,7 @@
       const SUS_SOFTWARE=['Pitu','Meitu','美图','BeautyPlus','FaceApp','Snapseed','Photoshop','Lightroom','GIMP','Affinity','Midjourney','Stable Diffusion','DALL-E','NovelAI','AI','Generated','Synthetic','Tencent'];
       const DEVICE_RESOLUTIONS={'Apple':{minW:2000,maxW:6000,minH:1500,maxH:4500},'Samsung':{minW:2000,maxW:5000,minH:1500,maxH:3500},'vivo':{minW:2000,maxW:5000,minH:1500,maxH:3500},'Xiaomi':{minW:2000,maxW:5000,minH:1500,maxH:3500},'HUAWEI':{minW:2000,maxW:5000,minH:1500,maxH:3500},'OPPO':{minW:2000,maxW:5000,minH:1500,maxH:3500},'Canon':{minW:3000,maxW:9000,minH:2000,maxH:6000},'Nikon':{minW:3000,maxW:9000,minH:2000,maxH:6000},'Sony':{minW:3000,maxW:9000,minH:2000,maxH:6000}};
 
-      function getExifData(f,cb){const m={device:'未知',software:'无',resolution:'未知',hasExif:false,isOriginal:false,isThirdParty:false,softwareRisk:'',integrityIssues:[],raw:{},note:''};m.note=`文件: ${f.name} (${(f.size/1024).toFixed(1)}KB)\n`;try{EXIF.getData(f,function(){const mk=EXIF.getTag(this,'Make'),md=EXIF.getTag(this,'Model'),sw=EXIF.getTag(this,'Software'),ps=EXIF.getTag(this,'ProcessingSoftware'),w=EXIF.getTag(this,'ImageWidth')||EXIF.getTag(this,'ExifImageWidth'),h=EXIF.getTag(this,'ImageHeight')||EXIF.getTag(this,'ExifImageHeight'),dt=EXIF.getTag(this,'DateTime')||EXIF.getTag(this,'DateTimeOriginal');const all=[mk,md,sw,ps].filter(Boolean).join(' ');let ssw='';for(const s of SUS_SOFTWARE){if(all.toLowerCase().includes(s.toLowerCase())){ssw=s;break;}}const itm=mk&&TRUSTED_MAKES.some(t=>mk.toLowerCase().includes(t.toLowerCase()));if(mk&&md){m.device=mk+' '+md;m.hasExif=true;if(ssw){m.isThirdParty=true;m.softwareRisk=`非相机签名: ${ssw}`;m.integrityIssues.push(`检测到非相机原生软件: ${ssw}`);m.note+=`⚠️ ${m.device} | 可疑: ${ssw}\n`;}else if(itm){if(w&&h){const mk2=Object.keys(DEVICE_RESOLUTIONS).find(k=>mk.toLowerCase().includes(k.toLowerCase()));if(mk2){const r=DEVICE_RESOLUTIONS[mk2];if(w<r.minW||w>r.maxW||h<r.minH||h>r.maxH)m.integrityIssues.push(`分辨率${w}×${h}与${mk2}不匹配`);}}m.isOriginal=true;m.note+=`✅ ${m.device} (可信)\n`;}else{m.isThirdParty=true;m.softwareRisk=`未知厂商: ${mk}`;m.integrityIssues.push(`厂商"${mk}"不在已知列表`);m.note+=`⚠️ ${m.device} | 非已知厂商\n`;}}else if(mk||md){m.device=mk||md;m.hasExif=true;m.integrityIssues.push('设备信息不完整');m.note+=`⚠️ 信息不完整\n`;}else{m.note+=`❌ 无设备信息\n`;}if(sw){m.software=sw;m.hasExif=true;}if(dt)m.note+=`时间: ${dt}\n`;if(w&&h)m.resolution=`${w}×${h}`;m.raw={Make:mk,Model:md,Software:sw};if(m.integrityIssues.length>0){m.note+=`⚠️ 完整性:\n`;m.integrityIssues.forEach(i=>{m.note+=`  • ${i}\n`;});}m.note+=`判定: hasExif=${m.hasExif}, orig=${m.isOriginal}, thirdParty=${m.isThirdParty}`;cb(m);});}catch(e){m.note+='异常: '+e.message;cb(m);}}
+      function getExifData(f,cb){const m={device:'未知',software:'无',resolution:'未知',hasExif:false,isOriginal:false,isThirdParty:false,softwareRisk:'',integrityIssues:[],raw:{},note:''};m.note=`文件: ${f.name} (${(f.size/1024).toFixed(1)}KB)\n`;try{EXIF.getData(f,function(){const mk=EXIF.getTag(this,'Make'),md=EXIF.getTag(this,'Model'),sw=EXIF.getTag(this,'Software'),ps=EXIF.getTag(this,'ProcessingSoftware'),w=EXIF.getTag(this,'ImageWidth')||EXIF.getTag(this,'ExifImageWidth'),h=EXIF.getTag(this,'ImageHeight')||EXIF.getTag(this,'ExifImageHeight'),dt=EXIF.getTag(this,'DateTime')||EXIF.getTag(this,'DateTimeOriginal');const all=[mk,md,sw,ps].filter(Boolean).join(' ');let ssw='';for(const s of SUS_SOFTWARE){if(all.toLowerCase().includes(s.toLowerCase())){ssw=s;break;}}const itm=mk&&TRUSTED_MAKES.some(t=>mk.toLowerCase().includes(t.toLowerCase()));if(mk&&md){m.device=mk+' '+md;m.hasExif=true;if(ssw){m.isThirdParty=true;m.softwareRisk=`非相机签名: ${ssw}`;m.integrityIssues.push(`检测到非相机原生软件: ${ssw}`);}else if(itm){if(w&&h){const mk2=Object.keys(DEVICE_RESOLUTIONS).find(k=>mk.toLowerCase().includes(k.toLowerCase()));if(mk2){const r=DEVICE_RESOLUTIONS[mk2];if(w<r.minW||w>r.maxW||h<r.minH||h>r.maxH)m.integrityIssues.push(`分辨率${w}×${h}与${mk2}不匹配`);}}m.isOriginal=true;}else{m.isThirdParty=true;m.softwareRisk=`未知厂商: ${mk}`;m.integrityIssues.push(`厂商"${mk}"不在已知列表`);}}else if(mk||md){m.device=mk||md;m.hasExif=true;m.integrityIssues.push('设备信息不完整');}else{}if(sw){m.software=sw;m.hasExif=true;}if(w&&h)m.resolution=`${w}×${h}`;m.raw={Make:mk,Model:md,Software:sw};cb(m);});}catch(e){cb(m);}}
 
       function extractPixels(img,md){return new Promise(r=>{const ctx=els.analysisCanvas.getContext('2d');let w=img.naturalWidth,h=img.naturalHeight;const s=Math.min(1,md/Math.max(w,h));w=Math.floor(w*s);h=Math.floor(h*s);els.analysisCanvas.width=w;els.analysisCanvas.height=h;ctx.drawImage(img,0,0,w,h);const d=ctx.getImageData(0,0,w,h).data;const mat=[];for(let y=0;y<h;y++){const row=[];for(let x=0;x<w;x++){const i=(y*w+x)*4;row.push(Math.round(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]));}mat.push(row);}r({grayMatrix:mat,width:w,height:h});});}
       function calcQuad(mat,x0,y0,x1,y1,sX,sY){let sm=0,tx=0,ed=0;for(let y=y0;y<y1-sY;y+=sY)for(let x=x0;x<x1-sX;x+=sX){const d=Math.abs(mat[y][x]-mat[y][x+sX]);if(d<=2)sm++;else if(d<=12)tx++;else ed++;}for(let y=y0;y<y1-sY;y+=sY)for(let x=x0;x<x1;x+=sX){const d=Math.abs(mat[y][x]-mat[y+sY][x]);if(d<=2)sm++;else if(d<=12)tx++;else ed++;}const tot=sm+tx+ed;return{edgeR:tot>0?ed/tot:0};}
@@ -606,18 +182,15 @@
         const qStats=quads.map(q=>({name:q.name,...calcQuad(mat,q.x0,q.y0,q.x1,q.y1,sX,sY)}));
         const qEdge=qStats.map(q=>q.edgeR);const maxQ=Math.max(...qEdge),minQ=Math.min(...qEdge);
         const qSpread=maxQ-minQ;const qCv=qSpread/Math.max(qEdge.reduce((a,b)=>a+b,0)/4,0.001);
-
         const bSizes=[{h:Math.max(3,Math.floor(h/20)),w:Math.max(3,Math.floor(w/20))},{h:Math.max(5,Math.floor(h/10)),w:Math.max(5,Math.floor(w/10))},{h:Math.max(8,Math.floor(h/6)),w:Math.max(8,Math.floor(w/6))}];
         let mxSp=0;const bH=bSizes[1].h,bW=bSizes[1].w;const bMeans=[],allV=[];
         for(let by=0;by<h-bH;by+=bH)for(let bx=0;bx<w-bW;bx+=bW){const vs=[];for(let y=by;y<by+bH;y++)for(let x=bx;x<bx+bW;x++)vs.push(mat[y][x]);const m=vs.reduce((a,b)=>a+b,0)/vs.length;bMeans.push(m);allV.push(vs.reduce((s,v)=>s+(v-m)*(v-m),0)/vs.length);}
         for(const bs of bSizes){const vars=[];for(let by=0;by<h-bs.h;by+=bs.h)for(let bx=0;bx<w-bs.w;bx+=bs.w){const vs=[];for(let y=by;y<by+bs.h;y++)for(let x=bx;x<bx+bs.w;x++)vs.push(mat[y][x]);const m=vs.reduce((a,b)=>a+b,0)/vs.length;vars.push(vs.reduce((s,v)=>s+(v-m)*(v-m),0)/vs.length);}const sv=[...vars].sort((a,b)=>a-b);const p95=sv[Math.floor(sv.length*0.95)]||0,p50=sv[Math.floor(sv.length*0.50)]||1,p05=sv[Math.floor(sv.length*0.05)]||0;const sp=(p95-p05)/Math.max(p50,1);if(sp>mxSp)mxSp=sp;}
-
         const aBM=bMeans.reduce((a,b)=>a+b,0)/bMeans.length;
         const cvBM=Math.sqrt(bMeans.reduce((s,v)=>s+(v-aBM)*(v-aBM),0)/bMeans.length)/Math.max(aBM,0.1);
         const lag=Math.floor(n/50),gM=samples.reduce((a,b)=>a+b,0)/n;let num=0,den=0;
         for(let i=0;i<n;i++)den+=(samples[i]-gM)*(samples[i]-gM);den=Math.max(den,1);
         for(let i=0;i<n-lag;i++)num+=(samples[i]-gM)*(samples[i+lag]-gM);const ac=num/den;
-
         const hasQuadAnomaly=qCv>0.80;
         let aiS=0;
         if(isOrig){if(eR>0.08)aiS+=0.0;else if(eR>0.05)aiS+=0.05;else aiS+=0.14;}
@@ -631,34 +204,92 @@
         if(!isOrig&&eR<0.05)aiS+=0.10;
         if(!isOrig&&eR<0.10&&hasQuadAnomaly)aiS+=0.08;
         const aiP=Math.min(Math.max(aiS,0.03),0.96);
-
         let tamper;
-        if(hasQuadAnomaly&&mxSp>14)tamper=0.60;
-        else if(hasQuadAnomaly)tamper=0.30;
-        else if(mxSp>26)tamper=0.52;
-        else if(mxSp>18)tamper=0.24;
-        else if(mxSp>10)tamper=0.08;
-        else tamper=0.03;
-
+        if(hasQuadAnomaly&&mxSp>14)tamper=0.60;else if(hasQuadAnomaly)tamper=0.30;
+        else if(mxSp>26)tamper=0.52;else if(mxSp>18)tamper=0.24;else if(mxSp>10)tamper=0.08;else tamper=0.03;
         let lightScore;
         if(isOrig){if(cvBM>0.35)lightScore=0.15;else if(cvBM>0.22)lightScore=0.38;else lightScore=0.65;}
         else{if(cvBM>0.28)lightScore=0.15;else if(cvBM>0.18)lightScore=0.38;else lightScore=0.65;}
-
         return{aiProbability:aiP,tamperingProbability:Math.min(Math.max(tamper,0.03),0.78),lightScore,quadrants:qStats,qCv,hasQuadAnomaly,details:{pixelCount:n,entropy:ent.toFixed(2),smoothR:(sR*100).toFixed(1),textureR:(tR*100).toFixed(1),edgeR:(eR*100).toFixed(1),dCv:dCv.toFixed(2),cvBM:cvBM.toFixed(3),autocorr:ac.toFixed(4),mxSp:mxSp.toFixed(1),blockCount:allV.length}};
+      }
+
+      // ==================== AI模型调用 ====================
+      async function queryAIModel(base64Image) {
+        try {
+          const base64Data = base64Image.split(',')[1];
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${MODELSCOPE_TOKEN}`
+            },
+            body: JSON.stringify({ input: { image: base64Data } })
+          });
+
+          if (!response.ok) {
+            console.error('AI模型请求失败:', response.status);
+            return null;
+          }
+
+          const result = await response.json();
+          console.log('🤖 AI模型原始返回:', JSON.stringify(result));
+
+          // 解析返回结果
+          let aiScore = null;
+          if (result.output) {
+            if (result.output.probabilities && Array.isArray(result.output.probabilities)) {
+              // probabilities通常是[真实概率, 伪造概率]
+              if (result.output.probabilities.length >= 2) {
+                aiScore = result.output.probabilities[1];
+              }
+            } else if (typeof result.output.prediction === 'number') {
+              aiScore = result.output.prediction;
+            } else if (typeof result.output.score === 'number') {
+              aiScore = result.output.score;
+            }
+          }
+
+          if (aiScore !== null) {
+            console.log('🤖 AI模型判定:', (aiScore * 100).toFixed(1) + '% 可能是AI生成/伪造');
+            return aiScore;
+          }
+
+          console.warn('无法解析AI模型返回:', result);
+          return null;
+        } catch (error) {
+          console.error('AI模型调用失败:', error);
+          return null;
+        }
       }
 
       function conf(s,t){if(t==='meta')return s>0.95?'98%':(s>0.8?'94%':(s>0.6?'80%':'55%'));if(t==='tamper')return s>0.5?'84%':s>0.20?'77%':s>0.06?'73%':'71%';const a=Math.abs(s-0.5);return a>0.30?'90%':a>0.16?'82%':a>0.06?'73%':'68%';}
 
-      function render(an,meta){
+      function render(an,meta,aiModelScore){
         const ap=an.aiProbability,tp=an.tamperingProbability,d=an.details,ls=an.lightScore;
         const isOrig=meta.isOriginal,isTP=meta.isThirdParty;
         const hasII=meta.integrityIssues.length>0;
         const aiHighButOrig=ap>0.35&&isOrig;
         const integrityCompromised=hasII||aiHighButOrig;
 
+        // ===== 综合本地分析和AI模型结果 =====
+        let finalAiScore;
+        let modelUsed = false;
+
+        if (aiModelScore !== null) {
+          // AI模型可用：70%权重给AI模型，30%给本地像素分析
+          finalAiScore = aiModelScore * 0.70 + ap * 0.30;
+          modelUsed = true;
+          console.log('📊 综合判定:', 'AI模型=' + (aiModelScore*100).toFixed(1) + '%', '本地=' + (ap*100).toFixed(1) + '%', '综合=' + (finalAiScore*100).toFixed(1) + '%');
+        } else {
+          // AI模型不可用：降级为纯本地分析
+          finalAiScore = ap;
+          console.log('📊 AI模型不可用，降级为本地分析:', (ap*100).toFixed(1) + '%');
+        }
+
+        // AI痕迹判定
         let aiR,aiD,aiC;
-        if(ap>0.35){aiR='高风险';aiD=an.hasQuadAnomaly?'象限极不均+边缘不足，高度疑似AI合成。':'多项指标与AI生成高度吻合。';aiC='risk-high';}
-        else if(ap>0.20){aiR='中等';aiD='部分指标偏离，可能经AI优化。';aiC='risk-mid';}
+        if(finalAiScore>0.35){aiR='高风险';aiD=modelUsed?'AI模型+本地分析均检测到异常特征。':'多项指标与AI生成高度吻合。';aiC='risk-high';}
+        else if(finalAiScore>0.20){aiR='中等';aiD='部分指标偏离，可能经AI优化。';aiC='risk-mid';}
         else{aiR='低风险';aiD='各项指标符合自然拍摄特征。';aiC='risk-low';}
 
         let metaR,metaC,metaD,metaConf;
@@ -670,8 +301,8 @@
         else{metaR='缺失(传输)';metaC='risk-high';metaD='EXIF被清除。';metaConf='55%';}
 
         let tR,tD,tC;
-        if(tp>0.45){tR='可疑';tD='多尺度检测发现区域差异过大，高度疑似拼接。';tC='risk-high';}
-        else if(tp>0.20){tR='需关注';tD=an.hasQuadAnomaly?'象限分布极不均，可能存在局部拼接。':'部分区域存在差异。';tC='risk-mid';}
+        if(tp>0.45){tR='可疑';tD='多尺度检测发现区域差异过大。';tC='risk-high';}
+        else if(tp>0.20){tR='需关注';tD=an.hasQuadAnomaly?'象限分布极不均。':'部分区域存在差异。';tC='risk-mid';}
         else if(tp>0.06){tR='微异常';tD='极轻微差异。';tC='risk-low';}
         else{tR='未发现';tD='各区域一致性良好。';tC='risk-low';}
 
@@ -681,7 +312,7 @@
         else{lR='异常';lD='光影分布异常。';lC='risk-high';}
 
         const metaPenalty=integrityCompromised?0.18:(isOrig?-0.08:(isTP?0.16:(meta.hasExif?0.03:0.05)));
-        const ov=ap*0.50+metaPenalty+tp*0.15+(lR==='异常'?0.08:lR==='需关注'?0.03:0);
+        const ov=finalAiScore*0.50+metaPenalty+tp*0.15+(lR==='异常'?0.08:lR==='需关注'?0.03:0);
 
         let vi,vt,vbc,vbt;
         if(ov>0.35){vi='danger';vt='疑似AI生成或篡改';vbc='badge-danger';vbt='建议复核';}
@@ -693,13 +324,14 @@
         if(integrityCompromised)tags.push('<span style="background:#fee2e2;color:#991b1b;">⚠️ 完整性存疑</span>');
         if(isTP)tags.push('<span style="background:#fef3c7;color:#92400e;">⚠️ 第三方</span>');
         if(an.hasQuadAnomaly)tags.push('<span style="background:#fef2f2;color:#991b1b;">🔲 象限异常</span>');
+        if(modelUsed)tags.push('<span style="background:#dbeafe;color:#1e40af;">🤖 AI模型</span>');
 
         els.verdictArea.innerHTML=`<div class="verdict-icon ${vi}">${vi==='safe'?'✅':vi==='warning'?'📱':'⚠️'}</div><div><div class="verdict-text">${vt}</div><span class="verdict-badge ${vbc}">${vbt}</span><div class="verdict-tags">${tags.join(' ')}</div></div>`;
 
         const items=[
-          {icon:'🧠',label:'生成式AI痕迹',value:aiR,cls:aiC,desc:aiD,conf:conf(ap,'ai'),detail:`平滑=${d.smoothR}% | 纹理=${d.textureR}% | 边缘=${d.edgeR}%`},
+          {icon:'🧠',label:'生成式AI痕迹',value:aiR,cls:aiC,desc:aiD,conf:conf(finalAiScore,'ai'),detail:`综合=${(finalAiScore*100).toFixed(0)}%`+(modelUsed?` (AI模型${(aiModelScore*100).toFixed(0)}% + 本地${(ap*100).toFixed(0)}%)`:' (仅本地)')},
           {icon:'📋',label:'元数据可信度',value:metaR,cls:metaC,desc:metaD,conf:metaConf,detail:integrityCompromised?'⚠️ 交叉验证失败':(isOrig?'✓ 完整':(isTP?`⚠️ ${meta.softwareRisk}`:'传输清除'))},
-          {icon:'✂️',label:'拼接/篡改检测',value:tR,cls:tC,desc:tD,conf:conf(tp,'tamper'),detail:`多尺度=${d.mxSp} | 象限差异=${(an.qCv*100).toFixed(1)}%`},
+          {icon:'✂️',label:'拼接/篡改检测',value:tR,cls:tC,desc:tD,conf:conf(tp,'tamper'),detail:`多尺度=${d.mxSp} | 象限=${(an.qCv*100).toFixed(1)}%`},
           {icon:'💡',label:'物理/光影一致性',value:lR,cls:lC,desc:lD,conf:conf(ls,'light'),detail:`块CV=${d.cvBM} | 差异CV=${d.dCv}`}
         ];
         els.dimensionsContainer.innerHTML=items.map(i=>`<div class="dimension"><div class="dim-top"><span class="dim-icon">${i.icon}</span><div><div class="dim-label">${i.label}</div><div class="dim-desc">${i.desc}</div><div class="dim-detail">${i.detail}</div></div></div><div class="dim-bottom"><div class="dim-value ${i.cls}">${i.value}<span class="confidence-tag">${i.conf}</span></div></div></div>`).join('');
@@ -707,19 +339,47 @@
         if(integrityCompromised){let w='<strong>⚠️ 完整性警告：</strong><br>';if(aiHighButOrig)w+='• 像素AI特征与元数据原图声明矛盾<br>';meta.integrityIssues.forEach(i=>{w+=`• ${i}<br>`;});els.integrityWarn.innerHTML=w;els.integrityWarn.style.display='block';}else{els.integrityWarn.style.display='none';}
         els.quadrantInfo.innerHTML=`<strong>🔲 四象限边缘区：</strong>`+an.quadrants.map(q=>`${q.name}=${(q.edgeR*100).toFixed(1)}%`).join(' | ')+` | 差异=${(an.qCv*100).toFixed(1)}%`;
         els.exifNote.innerHTML=meta.note;els.exifNote.style.display='block';
-        els.analysisNote.innerHTML=`<strong>📝 综合（阈值0.35）：</strong><br>AI=${(ap*100).toFixed(0)}%×0.50=${(ap*0.50).toFixed(3)} | 元数据=${metaPenalty>0?'+'+metaPenalty.toFixed(2):metaPenalty.toFixed(2)} | 拼接=${(tp*100).toFixed(0)}%×0.15=${(tp*0.15).toFixed(3)} | 光影=${lR==='异常'?'+0.08':lR==='需关注'?'+0.03':'0'}<br><b>总分=${ov.toFixed(3)}</b>（>0.35=疑似AI）`;
+        els.analysisNote.innerHTML=`<strong>📝 综合判定（阈值0.35）：</strong><br>AI综合=${(finalAiScore*100).toFixed(0)}%×0.50=${(finalAiScore*0.50).toFixed(3)}${modelUsed?' (AI模型70%+本地30%)':' (仅本地分析)'} | 元数据=${metaPenalty>0?'+'+metaPenalty.toFixed(2):metaPenalty.toFixed(2)} | 拼接=${(tp*100).toFixed(0)}%×0.15=${(tp*0.15).toFixed(3)}<br><b>总分=${ov.toFixed(3)}</b>（>0.35=疑似AI）`;
         els.resultCard.style.display='block';els.resultCard.scrollIntoView({behavior:'smooth',block:'nearest'});
       }
 
-      async function start(f){els.analyzeBtn.disabled=true;els.progressContainer.style.display='block';els.resultCard.style.display='none';els.exifNote.style.display='none';els.integrityWarn.style.display='none';const up=(p,m)=>{els.progressFill.style.width=p+'%';els.progressPercent.textContent=p+'%';els.statusText.textContent=m;};up(10,'⏳ EXIF...');getExifData(f,meta=>{up(25,'🖼️ Canvas...');const img=new Image();img.onload=async()=>{up(45,'🔬 提取...');const {grayMatrix,width,height}=await extractPixels(img,700);up(65,'📊 分析...');setTimeout(()=>{up(80,'📐 检测...');setTimeout(()=>{const an=analyze(grayMatrix,width,height,meta.isOriginal);up(95,'📋 报告...');setTimeout(()=>{up(100,'✅ 完成');render(an,meta);els.progressContainer.style.display='none';els.analyzeBtn.disabled=false;},200);},400);},400);};img.onerror=()=>{els.statusText.textContent='❌ 失败';els.analyzeBtn.disabled=false;};img.src=ib64;});}
+      async function start(f){
+        els.analyzeBtn.disabled=true;els.progressContainer.style.display='block';els.resultCard.style.display='none';els.exifNote.style.display='none';els.integrityWarn.style.display='none';
+        const up=(p,m)=>{els.progressFill.style.width=p+'%';els.progressPercent.textContent=p+'%';els.statusText.textContent=m;};
+
+        up(10,'⏳ 读取EXIF...');
+        getExifData(f,meta=>{
+          up(20,'🖼️ 解码图像...');
+          const img=new Image();
+          img.onload=async()=>{
+            up(35,'🔬 本地像素分析...');
+            const {grayMatrix,width,height}=await extractPixels(img,700);
+            const an=analyze(grayMatrix,width,height,meta.isOriginal);
+
+            up(60,'🤖 调用AI模型...');
+            const aiModelScore=await queryAIModel(ib64);
+
+            up(85,'📋 生成综合报告...');
+            setTimeout(()=>{
+              up(100,'✅ 完成');
+              render(an,meta,aiModelScore);
+              els.progressContainer.style.display='none';
+              els.analyzeBtn.disabled=false;
+            },300);
+          };
+          img.onerror=()=>{els.statusText.textContent='❌ 加载失败';els.analyzeBtn.disabled=false;};
+          img.src=ib64;
+        });
+      }
+
       els.fileInput.addEventListener('change',e=>{if(e.target.files[0])handleFile(e.target.files[0]);});
       els.uploadZone.addEventListener('dragover',e=>{e.preventDefault();els.uploadZone.classList.add('drag-active');});
       els.uploadZone.addEventListener('dragleave',e=>{e.preventDefault();els.uploadZone.classList.remove('drag-active');});
       els.uploadZone.addEventListener('drop',e=>{e.preventDefault();els.uploadZone.classList.remove('drag-active');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
-      function handleFile(f){if(!f.type.startsWith('image/')){alert('请上传图片');return;}if(f.size>30*1024*1024){alert('≤30MB');return;}sf=f;const r=new FileReader();r.onload=e=>{ib64=e.target.result;els.previewImage.src=ib64;els.previewSection.style.display='block';els.fileNameEl.textContent=f.name+' ('+(f.size/1024).toFixed(1)+' KB)';els.analyzeBtn.disabled=false;els.resultCard.style.display='none';els.progressContainer.style.display='none';};r.readAsDataURL(f);}
+      function handleFile(f){if(!f.type.startsWith('image/')){alert('请上传图片');return;}if(f.size>15*1024*1024){alert('≤15MB');return;}sf=f;const r=new FileReader();r.onload=e=>{ib64=e.target.result;els.previewImage.src=ib64;els.previewSection.style.display='block';els.fileNameEl.textContent=f.name+' ('+(f.size/1024).toFixed(1)+' KB)';els.analyzeBtn.disabled=false;els.resultCard.style.display='none';els.progressContainer.style.display='none';};r.readAsDataURL(f);}
       els.analyzeBtn.addEventListener('click',()=>{if(!sf)alert('请先上传照片');else start(sf);});
       els.resetLink.addEventListener('click',()=>{resetUI();window.scrollTo({top:0,behavior:'smooth'});});
-      resetUI();console.log('✅ v22 移动版就绪');
+      resetUI();console.log('✅ v23 AI模型版就绪');
     })();
   </script>
 </body>
