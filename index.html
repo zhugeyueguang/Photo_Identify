@@ -111,23 +111,22 @@
     .disclaimer { margin-top: 14px; padding: 10px 12px; font-size: 0.7rem; color: #94a3b8; background: #fff; border-radius: var(--radius-sm); border: 1px solid var(--border-light); display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
     .reset-link { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 16px; color: var(--accent); font-size: 0.82rem; cursor: pointer; font-weight: 600; padding: 12px; border-radius: var(--radius-sm); }
     .reset-link:active { background: var(--accent-light); }
-    .ai-model-badge { display: inline-block; font-size: 0.6rem; background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 8px; margin-left: 4px; }
   </style>
 </head>
 <body>
   <div class="app-container">
     <div class="header">
       <div class="logo"><div class="logo-icon">🔍</div><span class="logo-text">图像鉴真</span></div>
-      <span class="version-badge">v23 · AI模型</span>
+      <span class="version-badge">v24 · 修复API</span>
     </div>
     <div class="subtitle">上传照片 · 本地分析 + AI模型双重检测</div>
-    <div class="tips-box"><strong>💡 提示：</strong>请使用<b>光线充足、画质清晰</b>的原始照片。现已接入AI模型，准确率大幅提升。</div>
+    <div class="tips-box"><strong>💡 提示：</strong>请使用<b>光线充足、画质清晰</b>的原始照片。AI模型需要联网调用。</div>
 
     <label class="upload-label" for="fileInput">
       <div class="upload-zone" id="uploadZone">
         <span class="upload-icon">📁</span>
         <div class="upload-text">点击选择照片</div>
-        <div class="upload-hint">JPG / PNG / WEBP · 最大 15MB</div>
+        <div class="upload-hint">JPG / PNG / WEBP · 最大 10MB</div>
       </div>
     </label>
     <input type="file" id="fileInput" accept="image/*">
@@ -150,11 +149,16 @@
 
   <script>
     (function(){
-      console.log('🔍 v23 AI模型版启动');
+      console.log('🔍 v24 修复API版启动');
 
       // ==================== 配置 ====================
       const MODELSCOPE_TOKEN = 'ms-34bbd7cd-947b-484d-92a9-fd15c81a250a';
-      const API_URL = 'https://api.modelscope.cn/api/v1/models/iic/cv_vit_image-falsification-detection/predict';
+      
+      // 尝试多个可能的API地址
+      const API_URLS = [
+        'https://www.modelscope.cn/api/v1/models/iic/cv_vit_image-falsification-detection/predict',
+        'https://modelscope.cn/api/v1/models/iic/cv_vit_image-falsification-detection/predict'
+      ];
 
       const els={uploadZone:document.getElementById('uploadZone'),fileInput:document.getElementById('fileInput'),previewSection:document.getElementById('previewSection'),previewImage:document.getElementById('previewImage'),fileNameEl:document.getElementById('fileName'),analyzeBtn:document.getElementById('analyzeBtn'),progressContainer:document.getElementById('progressContainer'),progressFill:document.getElementById('progressFill'),progressPercent:document.getElementById('progressPercent'),statusText:document.getElementById('statusText'),resultCard:document.getElementById('resultCard'),verdictArea:document.getElementById('verdictArea'),dimensionsContainer:document.getElementById('dimensionsContainer'),integrityWarn:document.getElementById('integrityWarn'),quadrantInfo:document.getElementById('quadrantInfo'),exifNote:document.getElementById('exifNote'),analysisNote:document.getElementById('analysisNote'),resetLink:document.getElementById('resetLink'),analysisCanvas:document.getElementById('analysisCanvas')};
       let sf=null,ib64=null;
@@ -164,7 +168,7 @@
       const SUS_SOFTWARE=['Pitu','Meitu','美图','BeautyPlus','FaceApp','Snapseed','Photoshop','Lightroom','GIMP','Affinity','Midjourney','Stable Diffusion','DALL-E','NovelAI','AI','Generated','Synthetic','Tencent'];
       const DEVICE_RESOLUTIONS={'Apple':{minW:2000,maxW:6000,minH:1500,maxH:4500},'Samsung':{minW:2000,maxW:5000,minH:1500,maxH:3500},'vivo':{minW:2000,maxW:5000,minH:1500,maxH:3500},'Xiaomi':{minW:2000,maxW:5000,minH:1500,maxH:3500},'HUAWEI':{minW:2000,maxW:5000,minH:1500,maxH:3500},'OPPO':{minW:2000,maxW:5000,minH:1500,maxH:3500},'Canon':{minW:3000,maxW:9000,minH:2000,maxH:6000},'Nikon':{minW:3000,maxW:9000,minH:2000,maxH:6000},'Sony':{minW:3000,maxW:9000,minH:2000,maxH:6000}};
 
-      function getExifData(f,cb){const m={device:'未知',software:'无',resolution:'未知',hasExif:false,isOriginal:false,isThirdParty:false,softwareRisk:'',integrityIssues:[],raw:{},note:''};m.note=`文件: ${f.name} (${(f.size/1024).toFixed(1)}KB)\n`;try{EXIF.getData(f,function(){const mk=EXIF.getTag(this,'Make'),md=EXIF.getTag(this,'Model'),sw=EXIF.getTag(this,'Software'),ps=EXIF.getTag(this,'ProcessingSoftware'),w=EXIF.getTag(this,'ImageWidth')||EXIF.getTag(this,'ExifImageWidth'),h=EXIF.getTag(this,'ImageHeight')||EXIF.getTag(this,'ExifImageHeight'),dt=EXIF.getTag(this,'DateTime')||EXIF.getTag(this,'DateTimeOriginal');const all=[mk,md,sw,ps].filter(Boolean).join(' ');let ssw='';for(const s of SUS_SOFTWARE){if(all.toLowerCase().includes(s.toLowerCase())){ssw=s;break;}}const itm=mk&&TRUSTED_MAKES.some(t=>mk.toLowerCase().includes(t.toLowerCase()));if(mk&&md){m.device=mk+' '+md;m.hasExif=true;if(ssw){m.isThirdParty=true;m.softwareRisk=`非相机签名: ${ssw}`;m.integrityIssues.push(`检测到非相机原生软件: ${ssw}`);}else if(itm){if(w&&h){const mk2=Object.keys(DEVICE_RESOLUTIONS).find(k=>mk.toLowerCase().includes(k.toLowerCase()));if(mk2){const r=DEVICE_RESOLUTIONS[mk2];if(w<r.minW||w>r.maxW||h<r.minH||h>r.maxH)m.integrityIssues.push(`分辨率${w}×${h}与${mk2}不匹配`);}}m.isOriginal=true;}else{m.isThirdParty=true;m.softwareRisk=`未知厂商: ${mk}`;m.integrityIssues.push(`厂商"${mk}"不在已知列表`);}}else if(mk||md){m.device=mk||md;m.hasExif=true;m.integrityIssues.push('设备信息不完整');}else{}if(sw){m.software=sw;m.hasExif=true;}if(w&&h)m.resolution=`${w}×${h}`;m.raw={Make:mk,Model:md,Software:sw};cb(m);});}catch(e){cb(m);}}
+      function getExifData(f,cb){const m={device:'未知',software:'无',resolution:'未知',hasExif:false,isOriginal:false,isThirdParty:false,softwareRisk:'',integrityIssues:[],raw:{},note:''};try{EXIF.getData(f,function(){const mk=EXIF.getTag(this,'Make'),md=EXIF.getTag(this,'Model'),sw=EXIF.getTag(this,'Software'),ps=EXIF.getTag(this,'ProcessingSoftware'),w=EXIF.getTag(this,'ImageWidth')||EXIF.getTag(this,'ExifImageWidth'),h=EXIF.getTag(this,'ImageHeight')||EXIF.getTag(this,'ExifImageHeight');const all=[mk,md,sw,ps].filter(Boolean).join(' ');let ssw='';for(const s of SUS_SOFTWARE){if(all.toLowerCase().includes(s.toLowerCase())){ssw=s;break;}}const itm=mk&&TRUSTED_MAKES.some(t=>mk.toLowerCase().includes(t.toLowerCase()));if(mk&&md){m.device=mk+' '+md;m.hasExif=true;if(ssw){m.isThirdParty=true;m.softwareRisk=`非相机签名: ${ssw}`;m.integrityIssues.push(`检测到非相机原生软件: ${ssw}`);}else if(itm){if(w&&h){const mk2=Object.keys(DEVICE_RESOLUTIONS).find(k=>mk.toLowerCase().includes(k.toLowerCase()));if(mk2){const r=DEVICE_RESOLUTIONS[mk2];if(w<r.minW||w>r.maxW||h<r.minH||h>r.maxH)m.integrityIssues.push(`分辨率${w}×${h}与${mk2}不匹配`);}}m.isOriginal=true;}else{m.isThirdParty=true;m.softwareRisk=`未知厂商: ${mk}`;m.integrityIssues.push(`厂商"${mk}"不在已知列表`);}}else if(mk||md){m.device=mk||md;m.hasExif=true;m.integrityIssues.push('设备信息不完整');}if(sw){m.software=sw;m.hasExif=true;}if(w&&h)m.resolution=`${w}×${h}`;m.raw={Make:mk,Model:md,Software:sw};cb(m);});}catch(e){cb(m);}}
 
       function extractPixels(img,md){return new Promise(r=>{const ctx=els.analysisCanvas.getContext('2d');let w=img.naturalWidth,h=img.naturalHeight;const s=Math.min(1,md/Math.max(w,h));w=Math.floor(w*s);h=Math.floor(h*s);els.analysisCanvas.width=w;els.analysisCanvas.height=h;ctx.drawImage(img,0,0,w,h);const d=ctx.getImageData(0,0,w,h).data;const mat=[];for(let y=0;y<h;y++){const row=[];for(let x=0;x<w;x++){const i=(y*w+x)*4;row.push(Math.round(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]));}mat.push(row);}r({grayMatrix:mat,width:w,height:h});});}
       function calcQuad(mat,x0,y0,x1,y1,sX,sY){let sm=0,tx=0,ed=0;for(let y=y0;y<y1-sY;y+=sY)for(let x=x0;x<x1-sX;x+=sX){const d=Math.abs(mat[y][x]-mat[y][x+sX]);if(d<=2)sm++;else if(d<=12)tx++;else ed++;}for(let y=y0;y<y1-sY;y+=sY)for(let x=x0;x<x1;x+=sX){const d=Math.abs(mat[y][x]-mat[y+sY][x]);if(d<=2)sm++;else if(d<=12)tx++;else ed++;}const tot=sm+tx+ed;return{edgeR:tot>0?ed/tot:0};}
@@ -213,53 +217,79 @@
         return{aiProbability:aiP,tamperingProbability:Math.min(Math.max(tamper,0.03),0.78),lightScore,quadrants:qStats,qCv,hasQuadAnomaly,details:{pixelCount:n,entropy:ent.toFixed(2),smoothR:(sR*100).toFixed(1),textureR:(tR*100).toFixed(1),edgeR:(eR*100).toFixed(1),dCv:dCv.toFixed(2),cvBM:cvBM.toFixed(3),autocorr:ac.toFixed(4),mxSp:mxSp.toFixed(1),blockCount:allV.length}};
       }
 
-      // ==================== AI模型调用 ====================
+      // ==================== AI模型调用（尝试多个地址） ====================
       async function queryAIModel(base64Image) {
-        try {
-          const base64Data = base64Image.split(',')[1];
-          const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${MODELSCOPE_TOKEN}`
-            },
-            body: JSON.stringify({ input: { image: base64Data } })
-          });
+        const base64Data = base64Image.split(',')[1];
 
-          if (!response.ok) {
-            console.error('AI模型请求失败:', response.status);
-            return null;
-          }
-
-          const result = await response.json();
-          console.log('🤖 AI模型原始返回:', JSON.stringify(result));
-
-          // 解析返回结果
-          let aiScore = null;
-          if (result.output) {
-            if (result.output.probabilities && Array.isArray(result.output.probabilities)) {
-              // probabilities通常是[真实概率, 伪造概率]
-              if (result.output.probabilities.length >= 2) {
-                aiScore = result.output.probabilities[1];
-              }
-            } else if (typeof result.output.prediction === 'number') {
-              aiScore = result.output.prediction;
-            } else if (typeof result.output.score === 'number') {
-              aiScore = result.output.score;
-            }
-          }
-
-          if (aiScore !== null) {
-            console.log('🤖 AI模型判定:', (aiScore * 100).toFixed(1) + '% 可能是AI生成/伪造');
-            return aiScore;
-          }
-
-          console.warn('无法解析AI模型返回:', result);
-          return null;
-        } catch (error) {
-          console.error('AI模型调用失败:', error);
-          return null;
+        // 压缩图片到2MB以下
+        let compressedData = base64Data;
+        if (base64Data.length > 2.5 * 1024 * 1024 / 4 * 3) {
+          console.log('⚠️ 图片较大，进行压缩...');
+          const compressed = await compressImage(base64Image, 800, 0.7);
+          compressedData = compressed.split(',')[1];
         }
+
+        // 依次尝试每个API地址
+        for (const apiUrl of API_URLS) {
+          try {
+            console.log('🔄 尝试API:', apiUrl);
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${MODELSCOPE_TOKEN}`
+              },
+              body: JSON.stringify({ input: { image: compressedData } })
+            });
+
+            if (!response.ok) {
+              console.warn('API返回错误:', response.status, apiUrl);
+              continue;
+            }
+
+            const result = await response.json();
+            console.log('🤖 API返回:', JSON.stringify(result));
+
+            let aiScore = null;
+            if (result.output) {
+              if (result.output.probabilities && Array.isArray(result.output.probabilities) && result.output.probabilities.length >= 2) {
+                aiScore = result.output.probabilities[1];
+              } else if (typeof result.output.prediction === 'number') {
+                aiScore = result.output.prediction;
+              } else if (typeof result.output.score === 'number') {
+                aiScore = result.output.score;
+              }
+            }
+
+            if (aiScore !== null) {
+              console.log('✅ AI模型得分:', (aiScore * 100).toFixed(1) + '%');
+              return aiScore;
+            }
+          } catch (error) {
+            console.warn('API请求失败:', apiUrl, error.message);
+            continue;
+          }
+        }
+
+        console.warn('❌ 所有API地址均不可用');
+        return null;
+      }
+
+      // 图片压缩函数
+      function compressImage(base64, maxWidth, quality) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let w = img.width, h = img.height;
+            if (w > maxWidth) { h = (h * maxWidth) / w; w = maxWidth; }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = base64;
+        });
       }
 
       function conf(s,t){if(t==='meta')return s>0.95?'98%':(s>0.8?'94%':(s>0.6?'80%':'55%'));if(t==='tamper')return s>0.5?'84%':s>0.20?'77%':s>0.06?'73%':'71%';const a=Math.abs(s-0.5);return a>0.30?'90%':a>0.16?'82%':a>0.06?'73%':'68%';}
@@ -271,26 +301,20 @@
         const aiHighButOrig=ap>0.35&&isOrig;
         const integrityCompromised=hasII||aiHighButOrig;
 
-        // ===== 综合本地分析和AI模型结果 =====
-        let finalAiScore;
-        let modelUsed = false;
-
+        let finalAiScore, modelUsed = false;
         if (aiModelScore !== null) {
-          // AI模型可用：70%权重给AI模型，30%给本地像素分析
           finalAiScore = aiModelScore * 0.70 + ap * 0.30;
           modelUsed = true;
-          console.log('📊 综合判定:', 'AI模型=' + (aiModelScore*100).toFixed(1) + '%', '本地=' + (ap*100).toFixed(1) + '%', '综合=' + (finalAiScore*100).toFixed(1) + '%');
+          console.log('📊 综合: AI模型='+(aiModelScore*100).toFixed(1)+'% 本地='+(ap*100).toFixed(1)+'% 最终='+(finalAiScore*100).toFixed(1)+'%');
         } else {
-          // AI模型不可用：降级为纯本地分析
           finalAiScore = ap;
-          console.log('📊 AI模型不可用，降级为本地分析:', (ap*100).toFixed(1) + '%');
+          console.log('📊 降级本地: '+(ap*100).toFixed(1)+'%');
         }
 
-        // AI痕迹判定
         let aiR,aiD,aiC;
-        if(finalAiScore>0.35){aiR='高风险';aiD=modelUsed?'AI模型+本地分析均检测到异常特征。':'多项指标与AI生成高度吻合。';aiC='risk-high';}
-        else if(finalAiScore>0.20){aiR='中等';aiD='部分指标偏离，可能经AI优化。';aiC='risk-mid';}
-        else{aiR='低风险';aiD='各项指标符合自然拍摄特征。';aiC='risk-low';}
+        if(finalAiScore>0.35){aiR='高风险';aiD=modelUsed?'AI模型+本地均检测到异常。':'多项指标与AI生成高度吻合。';aiC='risk-high';}
+        else if(finalAiScore>0.20){aiR='中等';aiD='部分指标偏离。';aiC='risk-mid';}
+        else{aiR='低风险';aiD='符合自然拍摄特征。';aiC='risk-low';}
 
         let metaR,metaC,metaD,metaConf;
         if(integrityCompromised&&isOrig){metaR='可疑(可能伪造)';metaC='risk-high';metaD=`设备：${meta.device} | ⚠️ 元数据与像素不一致`;metaConf='45%';}
@@ -301,15 +325,15 @@
         else{metaR='缺失(传输)';metaC='risk-high';metaD='EXIF被清除。';metaConf='55%';}
 
         let tR,tD,tC;
-        if(tp>0.45){tR='可疑';tD='多尺度检测发现区域差异过大。';tC='risk-high';}
+        if(tp>0.45){tR='可疑';tD='区域差异过大。';tC='risk-high';}
         else if(tp>0.20){tR='需关注';tD=an.hasQuadAnomaly?'象限分布极不均。':'部分区域存在差异。';tC='risk-mid';}
         else if(tp>0.06){tR='微异常';tD='极轻微差异。';tC='risk-low';}
-        else{tR='未发现';tD='各区域一致性良好。';tC='risk-low';}
+        else{tR='未发现';tD='一致性良好。';tC='risk-low';}
 
         let lR,lD,lC;
-        if(ls<0.25){lR='合理';lD='光影分布自然。';lC='risk-low';}
+        if(ls<0.25){lR='合理';lD='光影自然。';lC='risk-low';}
         else if(ls<0.48){lR='需关注';lD='光影略有异常。';lC='risk-mid';}
-        else{lR='异常';lD='光影分布异常。';lC='risk-high';}
+        else{lR='异常';lD='光影异常。';lC='risk-high';}
 
         const metaPenalty=integrityCompromised?0.18:(isOrig?-0.08:(isTP?0.16:(meta.hasExif?0.03:0.05)));
         const ov=finalAiScore*0.50+metaPenalty+tp*0.15+(lR==='异常'?0.08:lR==='需关注'?0.03:0);
@@ -337,9 +361,9 @@
         els.dimensionsContainer.innerHTML=items.map(i=>`<div class="dimension"><div class="dim-top"><span class="dim-icon">${i.icon}</span><div><div class="dim-label">${i.label}</div><div class="dim-desc">${i.desc}</div><div class="dim-detail">${i.detail}</div></div></div><div class="dim-bottom"><div class="dim-value ${i.cls}">${i.value}<span class="confidence-tag">${i.conf}</span></div></div></div>`).join('');
 
         if(integrityCompromised){let w='<strong>⚠️ 完整性警告：</strong><br>';if(aiHighButOrig)w+='• 像素AI特征与元数据原图声明矛盾<br>';meta.integrityIssues.forEach(i=>{w+=`• ${i}<br>`;});els.integrityWarn.innerHTML=w;els.integrityWarn.style.display='block';}else{els.integrityWarn.style.display='none';}
-        els.quadrantInfo.innerHTML=`<strong>🔲 四象限边缘区：</strong>`+an.quadrants.map(q=>`${q.name}=${(q.edgeR*100).toFixed(1)}%`).join(' | ')+` | 差异=${(an.qCv*100).toFixed(1)}%`;
+        els.quadrantInfo.innerHTML=`<strong>🔲 四象限：</strong>`+an.quadrants.map(q=>`${q.name}=${(q.edgeR*100).toFixed(1)}%`).join(' | ')+` | 差异=${(an.qCv*100).toFixed(1)}%`;
         els.exifNote.innerHTML=meta.note;els.exifNote.style.display='block';
-        els.analysisNote.innerHTML=`<strong>📝 综合判定（阈值0.35）：</strong><br>AI综合=${(finalAiScore*100).toFixed(0)}%×0.50=${(finalAiScore*0.50).toFixed(3)}${modelUsed?' (AI模型70%+本地30%)':' (仅本地分析)'} | 元数据=${metaPenalty>0?'+'+metaPenalty.toFixed(2):metaPenalty.toFixed(2)} | 拼接=${(tp*100).toFixed(0)}%×0.15=${(tp*0.15).toFixed(3)}<br><b>总分=${ov.toFixed(3)}</b>（>0.35=疑似AI）`;
+        els.analysisNote.innerHTML=`<strong>📝 综合（阈值0.35）：</strong>AI=${(finalAiScore*100).toFixed(0)}%×0.50=${(finalAiScore*0.50).toFixed(3)}${modelUsed?' (🤖+本地)':' (仅本地)'} | 元数据=${metaPenalty>0?'+'+metaPenalty.toFixed(2):metaPenalty.toFixed(2)} | 拼接=${(tp*100).toFixed(0)}%×0.15=${(tp*0.15).toFixed(3)}<br><b>总分=${ov.toFixed(3)}</b>（>0.35=疑似AI）`;
         els.resultCard.style.display='block';els.resultCard.scrollIntoView({behavior:'smooth',block:'nearest'});
       }
 
@@ -349,17 +373,17 @@
 
         up(10,'⏳ 读取EXIF...');
         getExifData(f,meta=>{
-          up(20,'🖼️ 解码图像...');
+          up(20,'🖼️ 解码...');
           const img=new Image();
           img.onload=async()=>{
-            up(35,'🔬 本地像素分析...');
+            up(35,'🔬 本地分析...');
             const {grayMatrix,width,height}=await extractPixels(img,700);
             const an=analyze(grayMatrix,width,height,meta.isOriginal);
 
-            up(60,'🤖 调用AI模型...');
+            up(55,'🤖 调用AI模型...');
             const aiModelScore=await queryAIModel(ib64);
 
-            up(85,'📋 生成综合报告...');
+            up(85,'📋 生成报告...');
             setTimeout(()=>{
               up(100,'✅ 完成');
               render(an,meta,aiModelScore);
@@ -376,10 +400,10 @@
       els.uploadZone.addEventListener('dragover',e=>{e.preventDefault();els.uploadZone.classList.add('drag-active');});
       els.uploadZone.addEventListener('dragleave',e=>{e.preventDefault();els.uploadZone.classList.remove('drag-active');});
       els.uploadZone.addEventListener('drop',e=>{e.preventDefault();els.uploadZone.classList.remove('drag-active');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
-      function handleFile(f){if(!f.type.startsWith('image/')){alert('请上传图片');return;}if(f.size>15*1024*1024){alert('≤15MB');return;}sf=f;const r=new FileReader();r.onload=e=>{ib64=e.target.result;els.previewImage.src=ib64;els.previewSection.style.display='block';els.fileNameEl.textContent=f.name+' ('+(f.size/1024).toFixed(1)+' KB)';els.analyzeBtn.disabled=false;els.resultCard.style.display='none';els.progressContainer.style.display='none';};r.readAsDataURL(f);}
+      function handleFile(f){if(!f.type.startsWith('image/')){alert('请上传图片');return;}if(f.size>10*1024*1024){alert('≤10MB');return;}sf=f;const r=new FileReader();r.onload=e=>{ib64=e.target.result;els.previewImage.src=ib64;els.previewSection.style.display='block';els.fileNameEl.textContent=f.name+' ('+(f.size/1024).toFixed(1)+' KB)';els.analyzeBtn.disabled=false;els.resultCard.style.display='none';els.progressContainer.style.display='none';};r.readAsDataURL(f);}
       els.analyzeBtn.addEventListener('click',()=>{if(!sf)alert('请先上传照片');else start(sf);});
       els.resetLink.addEventListener('click',()=>{resetUI();window.scrollTo({top:0,behavior:'smooth'});});
-      resetUI();console.log('✅ v23 AI模型版就绪');
+      resetUI();console.log('✅ v24 就绪');
     })();
   </script>
 </body>
