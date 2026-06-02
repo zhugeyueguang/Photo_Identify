@@ -111,10 +111,10 @@
   <div class="app-container">
     <div class="header">
       <div class="logo"><div class="logo-icon">🔍</div><span class="logo-text">图像鉴真</span></div>
-      <span class="version-badge">v25 · CORS代理</span>
+      <span class="version-badge">v26 · 自建代理</span>
     </div>
     <div class="subtitle">上传照片 · 本地分析 + AI模型双重检测</div>
-    <div class="tips-box"><strong>💡 提示：</strong>请使用<b>光线充足、画质清晰</b>的原始照片。AI模型通过代理调用。</div>
+    <div class="tips-box"><strong>💡 提示：</strong>请使用<b>光线充足、画质清晰</b>的原始照片。AI模型通过专属代理调用，稳定可靠。</div>
 
     <label class="upload-label" for="fileInput">
       <div class="upload-zone" id="uploadZone">
@@ -143,17 +143,11 @@
 
   <script>
     (function(){
-      console.log('🔍 v25 CORS代理版启动');
+      console.log('🔍 v26 自建代理版启动');
 
       const MODELSCOPE_TOKEN = 'ms-34bbd7cd-947b-484d-92a9-fd15c81a250a';
       const API_TARGET = 'https://www.modelscope.cn/api/v1/models/iic/cv_vit_image-falsification-detection/predict';
-
-      // 多个 CORS 代理地址（按优先级排列）
-      const CORS_PROXIES = [
-        'https://api.allorigins.win/raw?url=',
-        'https://corsproxy.io/?',
-        'https://api.codetabs.com/v1/proxy?quest='
-      ];
+      const MY_PROXY = 'https://api-proxy.151712944.workers.dev/?url=';
 
       const els={uploadZone:document.getElementById('uploadZone'),fileInput:document.getElementById('fileInput'),previewSection:document.getElementById('previewSection'),previewImage:document.getElementById('previewImage'),fileNameEl:document.getElementById('fileName'),analyzeBtn:document.getElementById('analyzeBtn'),progressContainer:document.getElementById('progressContainer'),progressFill:document.getElementById('progressFill'),progressPercent:document.getElementById('progressPercent'),statusText:document.getElementById('statusText'),resultCard:document.getElementById('resultCard'),verdictArea:document.getElementById('verdictArea'),dimensionsContainer:document.getElementById('dimensionsContainer'),integrityWarn:document.getElementById('integrityWarn'),quadrantInfo:document.getElementById('quadrantInfo'),exifNote:document.getElementById('exifNote'),analysisNote:document.getElementById('analysisNote'),resetLink:document.getElementById('resetLink'),analysisCanvas:document.getElementById('analysisCanvas')};
       let sf=null,ib64=null;
@@ -212,7 +206,7 @@
         return{aiProbability:aiP,tamperingProbability:Math.min(Math.max(tamper,0.03),0.78),lightScore,quadrants:qStats,qCv,hasQuadAnomaly,details:{pixelCount:n,entropy:ent.toFixed(2),smoothR:(sR*100).toFixed(1),textureR:(tR*100).toFixed(1),edgeR:(eR*100).toFixed(1),dCv:dCv.toFixed(2),cvBM:cvBM.toFixed(3),autocorr:ac.toFixed(4),mxSp:mxSp.toFixed(1),blockCount:allV.length}};
       }
 
-      // ==================== 通过 CORS 代理调用 API ====================
+      // ==================== 通过自建代理调用 API ====================
       async function queryAIModel(base64Image) {
         let base64Data = base64Image.split(',')[1];
 
@@ -225,62 +219,45 @@
 
         const requestBody = JSON.stringify({ input: { image: base64Data } });
 
-        // 依次尝试每个代理
-        for (const proxy of CORS_PROXIES) {
-          try {
-            const proxyUrl = proxy + encodeURIComponent(API_TARGET);
-            console.log('🔄 尝试代理:', proxy.split('//')[1].split('/')[0]);
+        try {
+          const proxyUrl = MY_PROXY + encodeURIComponent(API_TARGET);
+          console.log('🔄 通过自建代理调用AI模型...');
 
-            const response = await fetch(proxyUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${MODELSCOPE_TOKEN}`,
-                'X-Requested-With': 'XMLHttpRequest'
-              },
-              body: requestBody
-            });
+          const response = await fetch(proxyUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${MODELSCOPE_TOKEN}`
+            },
+            body: requestBody
+          });
 
-            if (!response.ok) {
-              console.warn('代理返回错误:', response.status);
-              continue;
-            }
-
-            const text = await response.text();
-            console.log('📩 代理返回原始数据:', text.substring(0, 200));
-
-            let result;
-            try {
-              result = JSON.parse(text);
-            } catch {
-              // 可能是包装过的，尝试提取JSON部分
-              const jsonMatch = text.match(/\{[\s\S]*\}/);
-              if (jsonMatch) result = JSON.parse(jsonMatch[0]);
-              else continue;
-            }
-
-            let aiScore = null;
-            if (result.output) {
-              if (result.output.probabilities?.length >= 2) {
-                aiScore = result.output.probabilities[1];
-              } else if (typeof result.output.prediction === 'number') {
-                aiScore = result.output.prediction;
-              }
-            } else if (result.probabilities?.length >= 2) {
-              aiScore = result.probabilities[1];
-            }
-
-            if (aiScore !== null) {
-              console.log('✅ AI模型得分:', (aiScore * 100).toFixed(1) + '%');
-              return aiScore;
-            }
-          } catch (error) {
-            console.warn('代理请求失败:', error.message);
-            continue;
+          if (!response.ok) {
+            console.error('代理返回错误:', response.status);
+            const errText = await response.text();
+            console.error('错误详情:', errText);
+            return null;
           }
+
+          const result = await response.json();
+          console.log('🤖 AI模型返回:', JSON.stringify(result));
+
+          let aiScore = null;
+          if (result.output?.probabilities?.length >= 2) {
+            aiScore = result.output.probabilities[1];
+          } else if (typeof result.output?.prediction === 'number') {
+            aiScore = result.output.prediction;
+          }
+
+          if (aiScore !== null) {
+            console.log('✅ AI模型得分:', (aiScore * 100).toFixed(1) + '%');
+            return aiScore;
+          }
+        } catch (error) {
+          console.error('自建代理请求失败:', error.message);
         }
 
-        console.warn('❌ 所有代理均不可用');
+        console.warn('❌ AI模型不可用');
         return null;
       }
 
@@ -386,7 +363,7 @@
             const {grayMatrix,width,height}=await extractPixels(img,700);
             const an=analyze(grayMatrix,width,height,meta.isOriginal);
 
-            up(55,'🤖 通过代理调用AI模型...');
+            up(55,'🤖 调用AI模型...');
             const aiModelScore=await queryAIModel(ib64);
 
             up(85,'📋 生成报告...');
@@ -409,7 +386,7 @@
       function handleFile(f){if(!f.type.startsWith('image/')){alert('请上传图片');return;}if(f.size>10*1024*1024){alert('≤10MB');return;}sf=f;const r=new FileReader();r.onload=e=>{ib64=e.target.result;els.previewImage.src=ib64;els.previewSection.style.display='block';els.fileNameEl.textContent=f.name+' ('+(f.size/1024).toFixed(1)+' KB)';els.analyzeBtn.disabled=false;els.resultCard.style.display='none';els.progressContainer.style.display='none';};r.readAsDataURL(f);}
       els.analyzeBtn.addEventListener('click',()=>{if(!sf)alert('请先上传照片');else start(sf);});
       els.resetLink.addEventListener('click',()=>{resetUI();window.scrollTo({top:0,behavior:'smooth'});});
-      resetUI();console.log('✅ v25 就绪');
+      resetUI();console.log('✅ v26 就绪');
     })();
   </script>
 </body>
